@@ -21,5 +21,5 @@ tasks:
 The file "codebook.md" describes the data and the steps performed to clean up and create the 
 second dataset. 
 
-The output of this project "SecondData.csv" is a dataset with dimesions 180 x 68.
+The output of code in run_analysis.R is uploaded as "SecondData.csv", which is a dataset with dimesions 180 x 68.
 
