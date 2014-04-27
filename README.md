@@ -1,13 +1,13 @@
 # Getting and Cleaning Data Project
 
+In this project we download and clean a dataset collected from the accelerometers from Samsung Galaxy S smartphone.
 
-In this project we clean a dataset downloaded from 
-https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip,
-which can be used for later analysis. 
+
 This repository contains the following files:
 
-* run_analysis.R
+* SecondData.csv
 * codebook.md
+* run_analysis.R
 
 The file "run_analysis.R" contains the code written in R which performs the following
 tasks:
@@ -18,6 +18,8 @@ tasks:
 4. Appropriately labels the data set with descriptive activity names. 
 5. Creates a second, independent tidy data set , "SecondData.csv", with the average of each variable for each activity and each subject. 
 
-The file "codebook.md" describes the variables, the data, and the steps performed to clean up 
-the data. 
+The file "codebook.md" describes the data and the steps performed to clean up and create the 
+second dataset. 
+
+The output of this project "SecondData.csv" is a dataset with dimesions 180 x 68.
 
