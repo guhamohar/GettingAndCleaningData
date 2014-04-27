@@ -1,12 +1,14 @@
-base.path <-"C:/Users/gautam/Documents"
 
 
-# returns table with input as file and a vector with heading names
+require(reshape2)
+
+
+# returns table with input as  a file and a vector with heading names
 maketable <- function(file,col.names){ 
-  table <- read.table(paste(base.path,"UCI HAR Dataset", file, sep="/"),col.names=col.names)
+  table <- read.table(paste("./UCI HAR Dataset", file, sep="/"),col.names=col.names)
 }
 
-# extract feature labels (remove () from labels) and activity labels from txt files
+# extract feature labels (clean the labels) and activity labels from txt files
 
 featureLabels <- maketable("features.txt")[,2]
 featureLabels <- sub("()", "", featureLabels, fixed=T)
@@ -39,24 +41,12 @@ x <-sort(union(meanlabels,stdlabels))
 #alldata is the reduced dataset
 dataReduced <- allXData[,x]
 
-#names(dataReduced)
-
-
 #labels the y-data set with descriptive activity names
 yLabels=vector(mode="character", length=length(allYData))
 for(i in 1:6){
   pos <- which(allYData==i)
   yLabels[pos]<- as.character(activityLabels[i,2])
 }
-
-
-#Create tidy data
-tidyDataNames<-c("Activity.Code","Activity",names(dataReduced))
-tidyData<-cbind(allYData,yLabels,dataReduced)
-names(tidyData)<-tidyDataNames
-
-write.csv(tidyData,file=paste(base.path, "tidydata.csv", sep="/"))
-
 
 # reading subject IDs of training and test sets
 subjectTrain <- maketable("train/subject_train.txt")
@@ -66,17 +56,14 @@ subjectTest <- maketable("test/subject_test.txt")
 subjectVector = rbind(subjectTrain, subjectTest)
 idVector <- sort(unique(subjectVector)[,1])
 
-# creating a second dataset that has the means of each variable for each subject
-secondData <- matrix(ncol=dim(dataReduced)[2],nrow=length(idVector),
-                     dimnames=list(idVector,names(dataReduced)))
 
-#compute average of each variable for each activity and each subject
-for(sub in idVector){
-  subColMean <-colMeans(dataReduced[which(subjectVector==sub),])
-  secondData[sub,] = subColMean
-}
+tidyData<-cbind(subjectVector,yLabels,dataReduced)
+names(tidyData)<-c("Subject","Activity",paste("Avg",names(dataReduced),sep="."))
 
-# Modify row names by adding prefix "Subject" 
-rownames(secondData)<-paste("Subject", idVector)
-head(secondData,2)
-write.csv(secondData,file=paste(base.path, "CleaningDataProject.csv", sep="/"))
+#melt tidyData with id's as "Subject"and "Activity"
+molten <- melt(tidyData,id=c("Subject","Activity"))
+#dcast with aggregate function mean
+secondData<-dcast(molten,Subject+Activity~variable,mean)
+
+write.csv(secondData,file="SecondData.csv")
+      
